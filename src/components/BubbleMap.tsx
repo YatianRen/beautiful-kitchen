@@ -220,6 +220,17 @@ export function BubbleMap({ filters, selectedFilters, onFilterToggle }: BubbleMa
 
     // Don't let it be smaller than the screen
     const newMapWidth = Math.max(screenWidth, Math.ceil(fittedWidth));
+    
+    console.log('Map width calculation:', {
+      usedLeft,
+      usedRight,
+      contentSpan: usedRight - usedLeft,
+      leftPadding,
+      rightPadding,
+      fittedWidth,
+      newMapWidth,
+      screenWidth
+    });
 
     // Optional: normalize so the leftmost content starts at `contentPadding`
     const normalizeOffset = leftPadding - usedLeft;
