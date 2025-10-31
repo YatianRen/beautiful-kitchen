@@ -339,9 +339,10 @@ export function BubbleMap({ filters, selectedFilters, onFilterToggle }: BubbleMa
         ))}
       </div>
 
-      {/* Full-screen draggable overlay for map scrolling - IMPROVED: better z-index and event handling */}
-      <motion.div
-        className="absolute inset-0 cursor-grab z-10"
+      {/* Bubble container - now moves with x again */}
+      <motion.div 
+        ref={constraintsRef} 
+        className="w-full h-full pointer-events-none relative z-20"
         drag="x"
         dragConstraints={{
           left: -(mapWidth - screenWidth),
@@ -350,23 +351,18 @@ export function BubbleMap({ filters, selectedFilters, onFilterToggle }: BubbleMa
         dragElastic={0}
         dragMomentum={true}
         onDragEnd={(event, info) => {
-          // Clamp position on drag end to ensure we stay in bounds
           const currentX = x.get();
           const maxOffset = -(mapWidth - screenWidth);
           const clampedX = Math.max(maxOffset, Math.min(0, currentX));
           x.set(clampedX);
         }}
         whileDrag={{ cursor: 'grabbing' }}
-        style={{ touchAction: 'none', x }} // Bind x motion value directly
-      />
-
-      {/* Bubble container - now moves with x again */}
-      <div ref={constraintsRef} className="w-full h-full pointer-events-none relative z-20">
+        style={{ touchAction: 'none', x }}
+      >
         <motion.div
           className="relative h-full pointer-events-none"
           style={{ 
-            width: mapWidth,
-            x: x // Re-added: container moves with x to match scroll indicator
+            width: mapWidth
           }}
         >
           {/* Render decorative bubbles */}
@@ -405,7 +401,7 @@ export function BubbleMap({ filters, selectedFilters, onFilterToggle }: BubbleMa
             );
           })}
         </motion.div>
-      </div>
+      </motion.div>
 
       {/* Scroll indicator */}
       <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 w-64">
