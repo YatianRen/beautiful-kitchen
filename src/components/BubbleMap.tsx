@@ -44,10 +44,9 @@ export function BubbleMap({ filters, selectedFilters, onFilterToggle }: BubbleMa
     const screenHeight = typeof window !== 'undefined' ? window.innerHeight : 932;
     
     // Look at actual Figma design span: leftmost bubble at x=30, rightmost at x=1308 out of 1338 total
-    // This gives us a content span of 1278/1338 = 95.5% of design width
-    // Increase to 3.3x screen width for 50% more space to reduce bubble overlap
-    const targetMapWidth = screenWidth * 3.3; // Increased from 2.2x to 3.3x (50% wider)
-
+    // We want to scale this to be wider than screen but not excessively so
+    const figmaContentSpan = 1278; // 1308 - 30
+    
     // Your exact design positions converted from Figma (1338×932 design base)
     const designedPositions = [
       { x: 669/1338, y: 466/932, size: 132 },     // Electronics (center) - cx="669" cy="466"
@@ -73,18 +72,20 @@ export function BubbleMap({ filters, selectedFilters, onFilterToggle }: BubbleMa
     ];
 
     // In Figma design: leftmost at x=30, rightmost at x=1308, span = 1278 out of 1338 total width
-    const figmaContentSpan = 1278; // 1308 - 30
     const figmaLeftEdge = 30;
     const figmaRightEdge = 1308;
     
-    // Map this span to our target width, with padding on both sides
-    const leftPadding = 30; // Left padding
-    const rightPadding = 30; // Right padding - minimal buffer space
-    const availableWidth = targetMapWidth - (leftPadding + rightPadding);
+    // We want the map to be about 3.3x screen width, but let's calculate it properly
+    // Scale the Figma 1278px content span to be about 2.5x screen width (good balance)
+    const targetContentWidth = screenWidth * 2.5;
+    const scaleFactor = targetContentWidth / figmaContentSpan;
     
-    // Scale factor to map Figma content span to our available width
-    const scaleFactor = availableWidth / figmaContentSpan;
-
+    // Padding on both sides
+    const leftPadding = 30;
+    const rightPadding = 30;
+    
+    // The actual map width is content + padding
+    const targetMapWidth = targetContentWidth + leftPadding + rightPadding;
     const mapCenterX = targetMapWidth / 2;
     const screenCenterY = screenHeight / 2;
     
@@ -176,7 +177,7 @@ export function BubbleMap({ filters, selectedFilters, onFilterToggle }: BubbleMa
       const decor = decorativePositions[i];
       
       // Position decorative bubbles within the actual content area
-      const actualX = leftPadding + (decor.x * availableWidth);
+      const actualX = leftPadding + (decor.x * targetContentWidth);
       
       // Get dynamic vertical range for this X position
       const verticalRange = getVerticalRange(actualX / targetMapWidth);
