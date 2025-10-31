@@ -257,6 +257,14 @@ export function BubbleMap({ filters, selectedFilters, onFilterToggle }: BubbleMa
     }, 50); // Small delay to ensure state is updated
   }, [filters, screenWidth]);
 
+  // Sync staticMapX with main x for bubble inertia
+  useEffect(() => {
+    const unsubscribe = x.on('change', (latest) => {
+      staticMapX.set(latest);
+    });
+    return unsubscribe;
+  }, [x, staticMapX]);
+
   // Create inertia transforms for organic movement
   const bubbleInertiaX = useTransform(x, (latest) => latest);
   const decorativeBubbleInertiaX = useTransform(x, (latest) => latest * 0.98);
@@ -339,15 +347,17 @@ export function BubbleMap({ filters, selectedFilters, onFilterToggle }: BubbleMa
           left: -(mapWidth - screenWidth),
           right: 0
         }}
-        dragElastic={0.05}
+        dragElastic={0}
         dragMomentum={true}
-        onDrag={(event, info) => {
-          // Manually update position for smooth scrolling
-          const newX = x.get() + info.delta.x;
-          x.set(Math.max(-(mapWidth - screenWidth), Math.min(0, newX)));
+        onDragEnd={(event, info) => {
+          // Clamp position on drag end to ensure we stay in bounds
+          const currentX = x.get();
+          const maxOffset = -(mapWidth - screenWidth);
+          const clampedX = Math.max(maxOffset, Math.min(0, currentX));
+          x.set(clampedX);
         }}
         whileDrag={{ cursor: 'grabbing' }}
-        style={{ touchAction: 'none' }} // Prevent default touch behaviors
+        style={{ touchAction: 'none', x }} // Bind x motion value directly
       />
 
       {/* Bubble container - now moves with x again */}

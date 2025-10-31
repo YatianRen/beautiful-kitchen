@@ -98,11 +98,11 @@ export function FilterScreen() {
         animate={{ y: 0 }}
         transition={{ delay: 0.5, type: "spring", stiffness: 200, damping: 20 }}
       >
-        <div className="flex items-center justify-between p-4 pt-12">
+        <div className="relative flex items-center justify-between p-4 pt-4">
           <Button variant="ghost" size="sm" className="text-white hover:bg-white/20">
             <ArrowLeft className="w-5 h-5" />
           </Button>
-          <h1 className="text-white text-lg">Set Filters</h1>
+          <h1 className="text-white text-lg absolute left-1/2 -translate-x-1/2">Set Filters</h1>
           <Button 
             variant="ghost" 
             size="sm" 
