@@ -37,3 +37,6 @@ coverage/
 *.pem
 .cache/
 
+
+# Local Netlify folder
+.netlify

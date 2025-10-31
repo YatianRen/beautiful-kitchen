@@ -287,19 +287,6 @@ export function BubbleMap({ filters, selectedFilters, onFilterToggle }: BubbleMa
     x.set(newMapX);
   };
 
-  const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
-    const maxOffset = -(mapWidth - screenWidth);
-    
-    // Add momentum
-    const finalX = x.get() + info.velocity.x * 0.1;
-    
-    // Constrain within bounds
-    const constrainedX = Math.max(maxOffset, Math.min(0, finalX));
-    
-    // Animate to final position
-    x.set(constrainedX);
-  };
-
   // Background gradient that follows the drag
   const backgroundGradient = useTransform(
     x,
@@ -316,7 +303,7 @@ export function BubbleMap({ filters, selectedFilters, onFilterToggle }: BubbleMa
   ];
 
   return (
-    <div className="relative w-full h-screen overflow-hidden" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
+    <div className="relative w-full size-full overflow-hidden" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
       {/* Background with animated gradient */}
       <motion.div 
         className="absolute inset-0"
@@ -355,11 +342,10 @@ export function BubbleMap({ filters, selectedFilters, onFilterToggle }: BubbleMa
         dragElastic={0.05}
         dragMomentum={true}
         onDrag={(event, info) => {
-          // Update the map position as user drags with slower sensitivity
-          const dragSensitivity = 0.6; // Reduce drag sensitivity to make scrolling slower
-          x.set(x.get() + info.delta.x * dragSensitivity);
+          // Manually update position for smooth scrolling
+          const newX = x.get() + info.delta.x;
+          x.set(Math.max(-(mapWidth - screenWidth), Math.min(0, newX)));
         }}
-        onDragEnd={handleDragEnd}
         whileDrag={{ cursor: 'grabbing' }}
         style={{ touchAction: 'none' }} // Prevent default touch behaviors
       />

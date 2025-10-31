@@ -68,7 +68,7 @@ export function FilterScreen() {
 
   if (showResults) {
     return (
-      <div className="w-full h-screen bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center">
+      <div className="w-full size-full bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center">
         <motion.div
           className="text-center text-white"
           initial={{ scale: 0, opacity: 0 }}
@@ -90,7 +90,7 @@ export function FilterScreen() {
   }
 
   return (
-    <div className="relative w-full h-screen">
+    <div className="relative w-full size-full">
       {/* Header */}
       <motion.div 
         className="absolute top-0 left-0 right-0 z-20 bg-white/10 backdrop-blur-sm"
