@@ -77,9 +77,9 @@ export function BubbleMap({ filters, selectedFilters, onFilterToggle }: BubbleMa
     const figmaLeftEdge = 30;
     const figmaRightEdge = 1308;
     
-    // Map this span to our target width, with padding on both sides (extra on right for tapping space)
-    const leftPadding = 60; // Updated left padding
-    const rightPadding = 240; // Extra space on right for last bubble tapping
+    // Map this span to our target width, with padding on both sides
+    const leftPadding = 30; // Left padding
+    const rightPadding = 30; // Right padding - minimal buffer space
     const availableWidth = targetMapWidth - (leftPadding + rightPadding);
     
     // Scale factor to map Figma content span to our available width
