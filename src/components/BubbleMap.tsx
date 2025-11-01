@@ -240,6 +240,14 @@ export function BubbleMap({ filters, selectedFilters, onFilterToggle }: BubbleMa
 
     const finalPositions = positions.map(normalize);
     const finalDecoratives = decoratives.map(normalizeD);
+    
+    console.log('Normalization:', {
+      usedLeft,
+      leftPadding,
+      normalizeOffset,
+      firstPositionX: positions[0]?.x,
+      finalFirstPositionX: finalPositions[0]?.x
+    });
 
     setBubblePositions(finalPositions);
     setDecorativeBubbles(finalDecoratives);
