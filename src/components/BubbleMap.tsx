@@ -202,55 +202,19 @@ export function BubbleMap({ filters, selectedFilters, onFilterToggle }: BubbleMa
       });
     }
 
-    // Compute the map width from the actual content span, then use that for both container width and drag constraints
-    // after positions/decoratives are computed
-    const allEdgesRight = [
-      ...positions.map(p => p.x + p.size / 2),
-      ...decoratives.map(d => d.x + d.size / 2),
-    ];
-    const allEdgesLeft = [
-      ...positions.map(p => p.x - p.size / 2),
-      ...decoratives.map(d => d.x - d.size / 2),
-    ];
-
-    const usedRight = Math.max(...allEdgesRight);
-    const usedLeft = Math.min(...allEdgesLeft);
-
-    // total span of actual content + padding on both sides
-    const fittedWidth = (usedRight - usedLeft) + leftPadding + rightPadding;
-
-    // Don't let it be smaller than the screen
-    const newMapWidth = Math.max(screenWidth, Math.ceil(fittedWidth));
+    // Use the targetMapWidth directly since we already calculated positions based on it
+    const newMapWidth = Math.max(screenWidth, Math.ceil(targetMapWidth));
     
-    console.log('Map width calculation:', {
-      usedLeft,
-      usedRight,
-      contentSpan: usedRight - usedLeft,
-      leftPadding,
-      rightPadding,
-      fittedWidth,
+    console.log('Map width:', {
+      targetMapWidth,
       newMapWidth,
-      screenWidth
-    });
-
-    // Optional: normalize so the leftmost content starts at `contentPadding`
-    const normalizeOffset = leftPadding - usedLeft;
-    const normalize = (p: {x:number,y:number,size:number}) => ({...p, x: p.x + normalizeOffset});
-    const normalizeD = (d: {x:number,y:number,size:number,color:string}) => ({...d, x: d.x + normalizeOffset});
-
-    const finalPositions = positions.map(normalize);
-    const finalDecoratives = decoratives.map(normalizeD);
-    
-    console.log('Normalization:', {
-      usedLeft,
+      screenWidth,
       leftPadding,
-      normalizeOffset,
-      firstPositionX: positions[0]?.x,
-      finalFirstPositionX: finalPositions[0]?.x
+      rightPadding
     });
 
-    setBubblePositions(finalPositions);
-    setDecorativeBubbles(finalDecoratives);
+    setBubblePositions(positions);
+    setDecorativeBubbles(decoratives);
     setMapWidth(newMapWidth);
     
     // FIXED: Use setTimeout to ensure centering happens after state updates
